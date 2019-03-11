@@ -76,6 +76,90 @@ public class USACO{
     File file = new File(filename);
     Scanner scan = new Scanner(file);
 
-    return 0;
+    int n = scan.nextInt();
+    int m = scan.nextInt();
+    int t = scan.nextInt();
+    scan.nextLine();
+
+    String[][] field = new String[n][m];
+    for (int i = 0; i < n; i++){
+      String line = scan.nextLine();
+      for (int i2 = 0; i2 < m; i2++){
+        field[i][i2] = line.substring(i2, i2+1);
+      }
+    }
+
+    int r1 = scan.nextInt() - 1;
+    int c1 = scan.nextInt() - 1;
+    int r2 = scan.nextInt() - 1;
+    int c2 = scan.nextInt() - 1;
+
+    int[][] moveOn = new int[n][m];
+
+    field[r1][c1] = "1";
+    moveOn[r1][c1] = 1;
+    for (int r = 0; r < n; r ++){
+      for (int c = 0; c < m; c++){
+        if (field[r][c].equals("*")){
+          moveOn[r][c] = -1;
+        }
+      }
+    }
+    for (int i=0; i<n; i++){
+      System.out.println(" ");
+      for(int j=0; j<m; j++){
+        System.out.print(field[i][j] + " ");
+      }
+    }
+    for (int r = 0; r < n; r ++){
+      System.out.println("");
+      for (int c = 0; c < m; c++){
+        System.out.print(moveOn[r][c] + " ");
+      }
+    }
+
+      for (int currentMove = 1; currentMove <= t; currentMove++){
+        for(int r = 0; r < n; r ++){
+          for (int c = 0; c < m; c ++) {
+            if (moveOn[r][c] == currentMove){
+              moveOn[r][c] = 0;
+              int[] nextMoves = {1, 0, -1, 0, 0, 1, 0, -1};
+              for (int i = 0 ; i < nextMoves.length; i = i + 2){
+                int rF = r + nextMoves[i];
+                int cF = c + nextMoves[i+1];
+                if (rF >= 0 && rF < n && cF >= 0 && cF < m){
+                  if (field[rF][cF].equals(".")){
+                    field[rF][cF] = field[r][c];
+                    moveOn[rF][cF] = currentMove + 1;
+                  }else if (!(field[rF][cF].equals("*"))){
+                    field[rF][cF] = "" + (Integer.parseInt(field[rF][cF]) + Integer.parseInt(field[r][c]));
+                    moveOn[rF][cF] = currentMove + 1;
+                  }
+                }
+              }
+              field[r][c] = "0";
+              if (currentMove == 1){
+                field[r][c] = "0";
+              }
+            }
+          }
+        }
+        System.out.println(currentMove);
+        for (int r = 0; r < n; r ++){
+          System.out.println("");
+          for (int c = 0; c < m; c++){
+            System.out.print(field[r][c] + " ");
+          }
+        }
+        System.out.println(" ");
+        for (int r = 0; r < n; r ++){
+          System.out.println("");
+          for (int c = 0; c < m; c++){
+            System.out.print(moveOn[r][c] + " ");
+          }
+        }
+    }
+    System.out.println("incoming");
+    return Integer.parseInt(field[r2][c2]);
   }
 }
